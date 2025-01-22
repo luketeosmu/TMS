@@ -1,7 +1,57 @@
 import { useEffect, useState } from 'react';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-const Home = () => {
+import * as React from 'react';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import ListItemText from '@mui/material/ListItemText';
+import Select from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const names = [
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder',
+];
+
+// export default function MultipleSelectCheckmarks() {
+  
+//   return (
+    
+//   );
+// }
+
+const Home = () => {
+  
+  const [personName, setPersonName] = React.useState([]);
+  
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   //check user logged in if yes display page if no redirect to login page
@@ -11,37 +61,26 @@ const Home = () => {
   
   return (
     <div>
-      <div className="dropdown">
-        <button class="btn btn-secondary dropdown-toggle"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Dropdown button
-        </button>
-        <ul class="dropdown-menu">
-          {/* <li><a class="dropdown-item" href="#">Action</a></li>
-          <li><a class="dropdown-item" href="#">Another action</a></li> */}
-          <li><label><input type="checkbox" name="test1" id="" />test 1</label></li>
-          <li><label><input type="checkbox" name="test1" id="" />test 1</label></li>
-          <li><label><input type="checkbox" name="test1" id="" />test 1</label></li>
-        </ul>
-      </div>
-      <div class="dropdown">
-        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Dropdown link
-        </a>
-
-        <ul class="dropdown-menu">
-          <li>
-            <label>
-              <input type="checkbox" name="test1" id="" /> test 1
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="checkbox" name="test1" id="" /> test 2
-            </label>
-          </li>
-          {/* <li><a class="dropdown-item" href="#">Something else here</a></li> */}
-        </ul>
-      </div>
+      <FormControl sx={{ m: 1, width: 300 }}>
+        <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={personName}
+          onChange={handleChange}
+          input={<OutlinedInput label="Tag" />}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {names.map((name) => (
+            <MenuItem key={name} value={name}>
+              <Checkbox checked={personName.includes(name)} />
+              <ListItemText primary={name} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </div>
   )
 }
