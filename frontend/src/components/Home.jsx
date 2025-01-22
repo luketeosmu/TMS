@@ -28,7 +28,6 @@ const names = [
   'Carlos Abbott',
   'Miriam Wagner',
   'Bradley Wilkerson',
-  'Virginia Andrews',
 ];
 
 // export default function MultipleSelectCheckmarks() {
