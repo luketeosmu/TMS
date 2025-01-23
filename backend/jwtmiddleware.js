@@ -1,36 +1,30 @@
 const jwt = require('jsonwebtoken');
 
 exports.generateToken = (payload) => {
-  const secretKey = 'yourSecretKey'; // Replace with your own secret key
-  const options = {
-    expiresIn: '1h', // Token expiration time
-  };
+  /*
+    payload : {
+      username,
+      ip,
+      browserType
+    } 
+  */
+  const secretKey = 'yourSecretKey'; 
 
-  const token = jwt.sign(payload, secretKey, options);
+  const token = jwt.sign(payload, secretKey);
   return token;
 };
 
-exports.validateToken = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-  
-    if (authHeader) {
-      const token = authHeader.split(' ')[1]; // Bearer <token>
-      
-      jwt.verify(token, 'yourSecretKey', (err, payload) => {
-        if (err) {
-          return res.status(403).json({
-            success: false,
-            message: 'Invalid token',
-          });
+exports.validateToken = (req) => {
+    const token = req.cookies['jwt'];
+    // const username = req.body.username;
+    if(token) {
+        const decode = jwt.verify(token, 'yourSecretKey');
+        if(decode && decode.ip === req.ip && decode.browserType === req.headers['user-agent']) {
+            return true;
         } else {
-          req.user = payload;
-          next();
+            return false;
         }
-      });
     } else {
-      res.status(401).json({
-        success: false,
-        message: 'Token is not provided',
-      });
+      return false;
     }
 };

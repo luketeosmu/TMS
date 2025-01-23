@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import * as React from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -7,7 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
-
+import { useNavigate  } from 'react-router-dom';
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -39,8 +40,8 @@ const names = [
 
 const Home = () => {
   
+  const navigate = useNavigate();
   const [personName, setPersonName] = React.useState([]);
-  
   const handleChange = (event) => {
     const {
       target: { value },
@@ -52,14 +53,29 @@ const Home = () => {
   };
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  axios.defaults.withCredentials = true;
   //check user logged in if yes display page if no redirect to login page
   useEffect(() => {
-    
+    //check authorization
+    console.log("check authorization");
+    axios.post('http://localhost:3000/auth/protected')
+    .then((res) => {
+      console.log(res);
+      if(!res.data.success) {
+        console.log("unauthorized");
+        return navigate("/login");
+      }
+      console.log(res);
+    }).catch((error) => {
+      console.log(error);
+      return navigate("/login");
+    })
   }, [])
   
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
+      home page
+      {/* <FormControl sx={{ m: 1, width: 300 }}>
         <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"
@@ -78,7 +94,7 @@ const Home = () => {
             </MenuItem>
           ))}
         </Select>
-      </FormControl>
+      </FormControl> */}
     </div>
   )
 }
