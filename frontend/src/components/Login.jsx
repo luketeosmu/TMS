@@ -1,29 +1,11 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate  } from 'react-router-dom';
-const Login = () => {
-    const navigate = useNavigate();
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+const Login = ({ username, setUsername, password, setPassword, setIsLoggedIn }) => {
     axios.defaults.withCredentials = true;
-    const callApi = (event) => {
-        event.preventDefault();
-
-        axios.post("http://localhost:3000/auth/signUp", {
-            username: username,
-            password: password,
-            email: email 
-        })
-        .then((response) => {
-            console.log(response);
-            if(response.success) {
-                window.location('/');
-            }
-        }).catch((error) => {
-            console.error(error);
-        });
-    }
+    const navigate = useNavigate();
+    // const [username, setUsername] = useState('');
+    // const [password, setPassword] = useState('');
 
     const login = (event) => {
         event.preventDefault();
@@ -34,6 +16,7 @@ const Login = () => {
             console.log(res.cookies);
             if(res.data.success) {
                 console.log("login success redirect to home page");
+                setIsLoggedIn(true);
                 return navigate("/");
             } else {
                 console.log("wrong username or password");
@@ -42,6 +25,7 @@ const Login = () => {
             console.log(error);
         })
     }
+
     return (
         <div>
             <div className="w-full max-w-xs">

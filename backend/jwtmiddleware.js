@@ -14,17 +14,25 @@ exports.generateToken = (payload) => {
   return token;
 };
 
-exports.validateToken = (req) => {
+exports.validateToken = (req, res, next) => {
+    console.log("-------Validate Token-------");
     const token = req.cookies['jwt'];
     // const username = req.body.username;
     if(token) {
         const decode = jwt.verify(token, 'yourSecretKey');
         if(decode && decode.ip === req.ip && decode.browserType === req.headers['user-agent']) {
-            return true;
+            req.username = decode.username;
+            next();
         } else {
-            return false;
+            res.status(401).json({
+              success: false,
+              message: "Unauthorized. Please login"
+            });
         }
     } else {
-      return false;
+      res.status(401).json({
+        success: false,
+        message: "Unauthorized. Please login"
+      });
     }
 };
