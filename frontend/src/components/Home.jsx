@@ -1,81 +1,37 @@
-import { useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react'
 import axios from 'axios';
-import { useNavigate  } from 'react-router-dom';
-import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import UserTable from './UserTable';
+import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
-
-
-
+import { Container } from '@mui/material';
 const Home = () => {
-  axios.defaults.withCredentials = true;
-  const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState("");
-  const [groups, setGroups] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(false);
-  //get groups associated with user & username
-  const getGroups = () => {
-    axios.get('http://localhost:3000/users/getGroupsByUser')
-    .then((res) => {
-      console.log(res);
-      if(!res.data.success) {
-        console.log("unauthorized");
-        return navigate("/login");
-      }
-      console.log(res.data);
-      setUsername(res.data.username);
-      if(res.data.groups.includes('admin')) setIsAdmin(true);
-      setGroups(res.data.groups);
-    }).catch((error) => {
-      console.log(error);
-      return navigate("/login");
-    });
-  }
-
-  const getAllUsers = () => {
-    axios.get('http://localhost:3000/users/getUsers')
-    .then((res) => {
-      console.log(res.data);
-      setUsers(res.data.users);
-    }).catch((error) => {
-      console.log(error);
-    })
-  }
-
-  useEffect(() => {
-    getGroups();
-    setLoading(true);
-  }, []);
-
-  useEffect(() => {
-    if(isAdmin) {
-      getAllUsers();
+    axios.defaults.withCredentials = true;
+    const navigate = useNavigate();
+    const checkToken = () => {
+        axios.post('http://localhost:3000/auth/protected')
+        .then((res) => {
+          if(res.data.success) {
+            console.log("is logged in");
+          } else {
+            return navigate("/login");
+          }
+        }).catch((error) => {
+          console.log(error + " unauthorized at Home Page redirect to login page");
+          return navigate("/login");
+        });
     }
-    setLoading(false);
-  }, [isAdmin]);
 
-  // useEffect(() => {
-  //   const timerId = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 3000)
-  // }, []);
+    useEffect(() => {
+        console.log("checking token");
+        // checkToken();
+        console.log("check token complete");
+    }, []);
 
-  if(loading) {
-    return null;
-  }
-
-  return (
-    <Container>
-      {/* <Navbar /> */}
-      {/* <h1>Hi {username}</h1> */}
-      {isAdmin && 
-        <UserTable users={users}/>
-      }
-    </Container>
-  )
+    return (
+        <Container>
+            <Navbar />
+            Default Home Page
+        </Container>
+    )
 }
 
 export default Home

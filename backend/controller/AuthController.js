@@ -1,6 +1,6 @@
 const sql = require("mysql2");
 const bcrypt = require("bcryptjs");
-const jwtmiddleware = require("../jwtmiddleware");
+const jwtmiddleware = require("./jwtmiddleware");
 
 const createConnection = () => {
     const db = sql.createPool({

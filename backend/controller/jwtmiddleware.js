@@ -24,12 +24,14 @@ exports.validateToken = (req, res, next) => {
             req.username = decode.username;
             next();
         } else {
-            res.status(401).json({
-              success: false,
-              message: "Unauthorized. Please login"
-            });
+          console.log("fail");
+          res.status(401).json({
+            success: false,
+            message: "Unauthorized. Please login"
+          });
         }
     } else {
+      console.log("fail here");
       res.status(401).json({
         success: false,
         message: "Unauthorized. Please login"
