@@ -170,7 +170,7 @@ const UserTable = ({ users, setUsers, groups }) => {
               </TableCell>
               <TableCell>
                 <FormControl sx={{ m: 1, width: 300 }}>
-                  <InputLabel>Groups</InputLabel>
+                  <InputLabel>Group</InputLabel>
                     <Select
                       multiple
                       value={tempGroupName}
